@@ -1,12 +1,7 @@
 import React, { RefObject, MouseEvent, Fragment } from "react";
 import styled from "styled-components";
 import { darken } from "polished";
-import posed from "react-pose";
-
-const Box = posed.div({
-  visible: { opacity: 1 },
-  hidden: { opacity: 0 }
-});
+import { Transition } from 'react-spring';
 
 function getMousePos(canvas: HTMLCanvasElement, evt: MouseEvent) {
   var rect = canvas.getBoundingClientRect();
@@ -36,7 +31,7 @@ const BrushSizer = styled.div`
   width: 300px;
 `;
 
-const Circle = styled("div")<{ brushSize: number }>`
+const Circle = styled("div") <{ brushSize: number }>`
   background-color: white;
   border-radius: 50%;
   width: ${({ brushSize }) => `${brushSize * 2}px`};
@@ -48,7 +43,7 @@ const Palette = styled.div`
   display: flex;
 `;
 
-const Color = styled("div")<{ name: string }>`
+const Color = styled("div") <{ name: string }>`
   height: 50px;
   width: 50px;
   margin: 2px;
@@ -130,41 +125,49 @@ class IndexPage extends React.Component {
           onMouseUp={this.stopDrawing}
         />
 
-        <Box pose={mouseDown ? "hidden" : "visible"}>
-          <UI>
-            <BrushSizer>
-              <input
-                name="brushSize"
-                type="range"
-                min="5"
-                max="30"
-                step="1"
-                value={brushSize}
-                onChange={e => this.setState({ brushSize: e.target.value })}
-              />
-              <label htmlFor="brushSize">Brush Size</label>
-              <Circle brushSize={brushSize} />
-            </BrushSizer>
-            <Palette>
-              <Color
-                onClick={() => this.changeColor("#f9989f")}
-                name="#f9989f"
-              />
-              <Color
-                onClick={() => this.changeColor("#fccb8f")}
-                name="#fccb8f"
-              />
-              <Color
-                onClick={() => this.changeColor("#faf096")}
-                name="#faf096"
-              />
-              <Color
-                onClick={() => this.changeColor("#c5f8c8")}
-                name="#c5f8c8"
-              />
-            </Palette>
-          </UI>
-        </Box>
+        <Transition
+          items={!mouseDown}
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}>
+          {show =>
+            show && (props =>
+              <UI style={props}>
+                <BrushSizer>
+                  <input
+                    name="brushSize"
+                    type="range"
+                    min="5"
+                    max="30"
+                    step="1"
+                    value={brushSize}
+                    onChange={e => this.setState({ brushSize: e.target.value })}
+                  />
+                  <label htmlFor="brushSize">Brush Size</label>
+                  <Circle brushSize={brushSize} />
+                </BrushSizer>
+                <Palette>
+                  <Color
+                    onClick={() => this.changeColor("#f9989f")}
+                    name="#f9989f"
+                  />
+                  <Color
+                    onClick={() => this.changeColor("#fccb8f")}
+                    name="#fccb8f"
+                  />
+                  <Color
+                    onClick={() => this.changeColor("#faf096")}
+                    name="#faf096"
+                  />
+                  <Color
+                    onClick={() => this.changeColor("#c5f8c8")}
+                    name="#c5f8c8"
+                  />
+                </Palette>
+              </UI>
+            )
+          }
+        </Transition>
       </Wrapper>
     );
   }
