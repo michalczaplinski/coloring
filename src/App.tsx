@@ -185,14 +185,14 @@ class IndexPage extends React.Component {
 
   stopDrawing = () => this.setState({ mouseDown: false });
 
-  changeColor = (name: string) => this.setState({ color: name });
-
   keepDrawing = (e: any) => {
     const { mouseDown } = this.state;
     if (mouseDown) {
       this.keepDrawingDot(e);
     }
   };
+
+  changeColor = (name: string) => this.setState({ color: name });
 
   calculateData = () => {
     const canvas = this.canvas.current as HTMLCanvasElement;
@@ -232,12 +232,12 @@ class IndexPage extends React.Component {
           id="canvas"
           height={canvasHeight}
           width={canvasWidth}
-          onTouchStart={this.startDrawing}
-          onTouchMove={this.keepDrawing}
-          onTouchEnd={this.stopDrawing}
-          onMouseDown={this.startDrawing}
-          onMouseMove={this.keepDrawing}
-          onMouseUp={this.stopDrawing}
+          // onTouchStart={this.startDrawing}
+          // onTouchMove={this.keepDrawing}
+          // onTouchEnd={this.stopDrawing}
+          onPointerDown={this.startDrawing}
+          onPointerMove={this.keepDrawing}
+          onPointerUp={this.stopDrawing}
         />
         <ShareButton onClick={() => this.shareDrawing()}> SHARE</ShareButton>
 
